@@ -1,0 +1,79 @@
+using System;
+
+class Program
+{
+    /*
+    Алгоритм нахождения мажоритарного числа основывается на принципе голосования Бойера-Мура:
+    !Определение мажоритарного числа:
+    Мажоритарным считается число, которое встречается более чем в половине элементов массива.
+    */
+
+    static void Main()
+    {
+        int size = 10000; // Константа размера массива
+        int[] numbers = GenerateRandomArray(size, 0, 1001); // Генерация случайного массива
+
+        int majorityElement = FindMajorityElement(numbers); // Поиск мажоритарного числа
+
+        if (majorityElement != -1)
+        {
+            Console.WriteLine($"Мажоритарное число: {majorityElement}"); // Вывод мажоритарного числа
+        }
+        else
+        {
+            Console.WriteLine("Мажоритарного числа нет."); // Сообщение об отсутствии мажоритарного числа
+        }
+    }
+
+    static int[] GenerateRandomArray(int size, int minValue, int maxValue)
+    {
+        // Метод для генерации массива случайными числами в заданном диапазоне
+        Random random = new Random();
+        int[] array = new int[size];
+
+        for (int i = 0; i < size; i++)
+        {
+            array[i] = random.Next(minValue, maxValue);
+        }
+
+        return array;
+    }
+
+    static int FindMajorityElement(int[] nums)
+    {
+        // Метод поиска мажоритарного числа на основе алгоритма Бойера-Мура
+
+        int candidate = -1; // Инициализация кандидата
+        int count = 0; // Счетчик кандидатов
+
+        // Первый этап: нахождение кандидата
+        foreach (var num in nums)
+        {
+            if (count == 0)
+            {
+                candidate = num; // Установка нового кандидата
+                count = 1;
+            }
+            else if (num == candidate)
+            {
+                count++; // Увеличение счетчика
+            }
+            else
+            {
+                count--; // Уменьшение счетчика
+            }
+        }
+
+        // Второй этап: проверка, является ли кандидат мажоритарным числом
+        count = 0;
+        foreach (var num in nums)
+        {
+            if (num == candidate)
+            {
+                count++; // Подсчет числа встреч кандидата
+            }
+        }
+
+        return (count > nums.Length / 2) ? candidate : -1; // Возврат кандидата или -1
+    }
+}
